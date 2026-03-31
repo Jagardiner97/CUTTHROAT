@@ -13,7 +13,7 @@ cp = 1
 [Mesh]
     [gen]
         type = FileMeshGenerator
-        file = heat_exchanger.msh
+        file = ../mesh/heat_exchanger.msh
     []
     [corner_node]
         type = ExtraNodesetGenerator
@@ -167,6 +167,6 @@ cp = 1
 
 [Outputs]
     exodus = true
-    file_base = problems/hx/hx
+    file_base = results/hx
     perf_graph = true
 []
