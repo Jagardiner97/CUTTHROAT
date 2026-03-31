@@ -1,7 +1,8 @@
 import subprocess
 
 class Simulator:
-    def __init__(self, type, params):
+    def __init__(self, type='MOOSE', params="./cutthroat-opt"):
+        self.type = type
         if self.type == 'MOOSE':
             self.app_name = params
         else:
