@@ -13,7 +13,7 @@ cp = {{ cp }}
 [Mesh]
     [gen]
         type = FileMeshGenerator
-        file = ../mesh/{{ mesh_name }}
+        file = ../{{ mesh_name }}
     []
     [corner_node]
         type = ExtraNodesetGenerator
@@ -78,17 +78,16 @@ cp = {{ cp }}
     []
 []      
 
-# Dirichlet BCs: top (u,v)=(3,0), bottom (u,v)=(0,0)
 [BCs]
     [x_no_slip]
         type = DirichletBC
-        boundary = 'Bottom Top Wall'
+        boundary = 'Wall'
         value = 0.0
         variable = vel_x
     []
     [y_no_slip]
         type = DirichletBC
-        boundary = 'Bottom Top Wall'
+        boundary = 'Wall'
         value = 0.0
         variable = vel_y
     []
