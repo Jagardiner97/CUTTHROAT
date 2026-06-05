@@ -1,4 +1,4 @@
-# couette.i - generated mesh for 2x1 rectangular channel
+# template.i - template input file for MOOSE simulations of heat exchanger problems
 # Material properties
 rho = {{ rho }}
 mu = {{ mu }}
@@ -24,18 +24,29 @@ cp = {{ cp }}
 []
 
 [AuxVariables]
-    [Pe]
+    [Reynolds]
+        family = MONOMIAL
+        order = CONSTANT
+    []
+    [Peclet]
         family = MONOMIAL
         order = FIRST
     []
 []
 
 [AuxKernels]
-    [Pe]
+    [Reynolds]
+        type = ReynoldsNumberFunctorAux
+        speed = speed
+        rho = ${rho}
+        mu = ${mu}
+        variable = Reynolds
+    []
+    [Peclet]
         type = PecletNumberFunctorAux
         speed = speed
         thermal_diffusivity = 'thermal_diffusivity'
-        variable = Pe
+        variable = Peclet
     []
 []
 
@@ -92,27 +103,27 @@ cp = {{ cp }}
         variable = vel_y
     []
     [inlet]
-        type = FunctionDirichletBC
+        type = DirichletBC
         boundary = 'Inlet'
-        function = 'inlet_function'
+        value = {{ U_in }}
         variable = vel_x
     []
     [pressure_pin]
         type = DirichletBC
         boundary = 'pinned_node'
-        value = 0.0
+        value = {{ P_pin }}
         variable = p
     []
     [T_hot]
         type = DirichletBC
         boundary = 'Wall'
-        value = 1.0
+        value = {{ T_wall }}
         variable = T
     []
     [T_cold]
         type = DirichletBC
         boundary = 'Inlet'
-        value = 0.0
+        value = {{ T_in }}
         variable = T
     []  
 []
@@ -144,7 +155,7 @@ cp = {{ cp }}
 [Functions]
     [inlet_function]
         type = ParsedFunction
-        expression = '15.0' # Constant inlet velocity
+        expression = '1.0' # Constant inlet velocity
     []
 []
 
