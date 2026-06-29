@@ -374,6 +374,8 @@ binaryoutput
 *.nsys-rep
 *.sqlite
 couette.yaml
+cutthroat.yaml
+unit/Makefile
 
 # project files
 *.json
