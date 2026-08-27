@@ -7,12 +7,18 @@
 //* Licensed under LGPL 2.1, please see LICENSE for details
 //* https://www.gnu.org/licenses/lgpl-2.1.html
 
-#include "CUTTHROATTestApp.h"
-#include "MooseMain.h"
+#pragma once
 
-// Begin the main program.
-int
-main(int argc, char * argv[])
+#include "MooseApp.h"
+
+class cutthroatApp : public MooseApp
 {
-  return Moose::main<CUTTHROATTestApp>(argc, argv);
-}
+public:
+  static InputParameters validParams();
+
+  cutthroatApp(const InputParameters & parameters);
+  virtual ~cutthroatApp();
+
+  static void registerApps();
+  static void registerAll(Factory & f, ActionFactory & af, Syntax & s);
+};
