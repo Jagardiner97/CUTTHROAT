@@ -1,0 +1,6 @@
+Applications:
+    cutthroat:
+        app_types:
+            - cutthroatApp
+        content_directory: ${ROOT_DIR}/doc/content
+        log_default: WARNING
