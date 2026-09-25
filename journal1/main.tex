@@ -1,0 +1,212 @@
+%% 
+%% Copyright 2019-2024 Elsevier Ltd
+%% 
+%% This file is part of the 'CAS Bundle'.
+%% --------------------------------------
+%% 
+%% It may be distributed under the conditions of the LaTeX Project Public
+%% License, either version 1.3c of this license or (at your option) any
+%% later version.  The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.3c or later is part of all distributions of LaTeX
+%% version 1999/12/01 or later.
+%% 
+%% The list of all files belonging to the 'CAS Bundle' is
+%% given in the file `manifest.txt'.
+%% 
+%% Template article for cas-dc documentclass for 
+%% double column output.
+
+\documentclass[a4paper,fleqn]{cas-dc}
+
+% If the frontmatter runs over more than one page
+% use the longmktitle option.
+
+%\documentclass[a4paper,fleqn,longmktitle]{cas-dc}
+
+%\usepackage[numbers]{natbib}
+%\usepackage[authoryear]{natbib}
+\usepackage[authoryear,longnamesfirst]{natbib}
+
+%%%Author macros
+\def\tsc#1{\csdef{#1}{\textsc{\lowercase{#1}}\xspace}}
+\tsc{WGM}
+\tsc{QE}
+%%%
+
+% Uncomment and use as if needed
+%\newtheorem{theorem}{Theorem}
+%\newtheorem{lemma}[theorem]{Lemma}
+%\newdefinition{rmk}{Remark}
+%\newproof{pf}{Proof}
+%\newproof{pot}{Proof of Theorem \ref{thm}}
+
+\begin{document}
+\let\WriteBookmarks\relax
+\def\floatpagepagefraction{1}
+\def\textpagefraction{.001}
+
+% Short title
+\shorttitle{PINN-TO}    
+
+% Short author
+\shortauthors{Gardiner, Wang}  
+
+% Main title of the paper
+\title [mode = title]{Topology Optimization of Heat Exchangers Using Physics-Informed Neural Networks}  
+
+% Title footnote mark
+% eg: \tnotemark[1]
+%\tnotemark[1] 
+
+% Title footnote 1.
+% eg: \tnotetext[1]{Title footnote text}
+%\tnotetext[1]{} 
+
+% First author
+\author[1]{John A. Gardiner}[type=author,
+        orcid=0000-0003-4965-8076
+]
+
+% Corresponding author indication
+\cormark[1]
+
+% Footnote of the first author
+%\fnmark[1]
+
+% Email id of the first author
+\ead{austin.gardiner@usu.edu}
+
+% URL of the first author
+%\ead[url]{}
+
+% Credit authorship
+% eg: \credit{Conceptualization of this study, Methodology, Software}
+\credit{Investigation, Methodology, Validation, Writing - original draft}
+
+\author[1]{Hailei Wang}%[]
+
+% Footnote of the second author
+%\fnmark[2]
+
+% Email id of the second author
+\ead{hailei.wang@usu.edu}
+
+% URL of the second author
+%\ead[url]{}
+
+% Credit authorship
+\credit{Supervision, Writing - review and editing}
+
+% Address/affiliation
+\affiliation[1]{organization={Department of Mechanical Engineering, Utah State University},
+            addressline={Old Main Hill}, 
+            city={Logan},
+%          citysep={}, % Uncomment if no comma needed between city and postcode
+            postcode={84322}, 
+            state={UT},
+            country={USA}}
+
+% Corresponding author text
+\cortext[1]{Corresponding author}
+
+% Footnote text
+%\fntext[1]{}
+
+% For a title note without a number/mark
+%\nonumnote{}
+
+% Here goes the abstract
+\begin{abstract}
+Topology optimization (TO) of heat exchangers is a promising approach for enhancing thermal-hydraulic performance in various engineering applications. However, traditional TO methods often rely on computationally expensive physics solvers, limiting their practicality for complex designs and widespread application. This research proposes the integration of Physics-Informed Neural Networks (PINNs) with TO to create a novel framework for heat exchanger optimization. The PINN-TO framework will leverage the ability of PINNs to quickly approximate solutions to governing equations of fluid flow and heat transfer, enabling efficient evaluation and optimization of heat exchanger geometries. The objectives of this research include developing the PINN-TO framework, quantifying its performance against traditional TO methods, validating the optimized designs through experimental testing, and generalizing the framework across various heat exchanger configurations. The anticipated outcome is a computationally efficient and effective method for designing high-performance heat exchangers, contributing to advancements in customized heat transfer applications. \nocite{*}
+\end{abstract}
+
+% Research highlights
+\begin{highlights}
+\item PINN-TO addresses the computational efficiency challenges of traditional TO methods.
+\item The framework enables efficient optimization of heat exchanger geometries.
+\item Experimental validation demonstrates the effectiveness of the PINN-TO approach.
+\end{highlights}
+
+% Keywords
+% Each keyword is seperated by \sep
+\begin{keywords}
+ \sep Optimization \sep Physics-Informed Neural Networks \sep Heat Exchangers
+\end{keywords}
+
+\maketitle
+
+% Main text
+\section{Introduction}\label{sec:introduction}
+
+P1: What is heat exchanger topology optimization? How does it improve the performance of heat exchanger designs? What are the challenges and limitations of traditional topology optimization methods in the context of heat exchanger design? Talk about computational expense and the difficulty of manufacturing the optimized designs.
+
+P2: How can Physics-Informed Neural Networks (PINNs) be used to address the challenges of traditional topology optimization methods in heat exchanger design? What are the advantages of using PINNs in this context? How do PINNs work in general and what makes them suitable for this application? Introduce the concept of surrogate models and their role in accelerating the optimization process.
+
+P3: Where can this PINN-TO approach be applied in the field of heat exchanger design? What are the potential applications and benefits of using this method in real-world scenarios?
+
+\section{Methodology}\label{sec:methodology}
+
+This is where I will describe the methodology and structure of the PINN TO model.
+
+\subsection{PINN-TO Structure}
+
+Introduce the structure of the PINN-TO system. Talk about the geometry generator model, the PINN simulator model, and the optimization algorithm. Talk about the two stage generator training process including the reinforcement learning aspect.
+
+\subsection{Project Specifics}
+
+Describe the details of the testing setup. Explain the domain size, the boundary conditions, fluid properties, and the simulation parameters.
+
+\subsection{Data Collection}
+
+Describe the process of collecting the data needed for the study. Explain the sources of the data and the methods used to gather and preprocess it.
+
+\subsection{Reinforcement Learning and Generator Training}
+
+Describe the reinforcement learning approach used to train the generator model. Explain how the generator is trained to produce optimal geometries and how the reinforcement learning algorithm is integrated with the overall PINN-TO framework.
+
+\section{Results}\label{sec:results}
+
+This is where I will show the results of the base case and demonstrate the effectiveness of the PINN TO approach.
+
+\subsection{Base Case}
+
+Show the results of the base case, including any relevant metrics or visualizations.
+
+\subsection{PINN accuracy vs training dataset size}
+
+Show the relationship between the accuracy of the PINN model and the size of the training dataset.
+
+\subsection{Geometry grid resolution effect}
+
+How do the geometry grid resolution and the resulting accuracy of the PINN model compare?
+
+\subsection{More representative test case}
+
+Show the results of a more representative test case, demonstrating the effectiveness of the PINN-TO approach in a more realistic scenario.
+
+\section{Conclusion}\label{sec:Conclusion}
+
+This is where I will summarize the findings and discuss the implications of the research.
+
+% To print the credit authorship contribution details
+\printcredits
+
+%% Loading bibliography style file
+%\bibliographystyle{model1-num-names}
+\bibliographystyle{cas-model2-names}
+
+% Loading bibliography database
+\bibliography{references}
+
+% Biography
+%\bio{}
+% Here goes the biography details.
+%\endbio
+
+%\bio{pic1}
+% Here goes the biography details.
+%\endbio
+
+\end{document}
+
