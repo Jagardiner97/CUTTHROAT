@@ -1,0 +1,182 @@
+# template.i - template input file for MOOSE simulations of heat exchanger problems
+# Material properties
+rho = {{ rho }}
+mu = {{ mu }}
+k = {{ k }}
+cp = {{ cp }}
+
+[GlobalParams]
+    gravity = '0 0 0' # No gravity for this problem
+    pspg = true # Enable PSPG stabilization for pressure
+[]
+
+[Mesh]
+    [gen]
+        type = FileMeshGenerator
+        file = {{ mesh_name }}
+    []
+    [corner_node]
+        type = ExtraNodesetGenerator
+        input = gen
+        new_boundary = 'pinned_node'
+        nodes = '0'
+    []  
+[]
+
+[AuxVariables]
+    [Reynolds]
+        family = MONOMIAL
+        order = CONSTANT
+    []
+    [Peclet]
+        family = MONOMIAL
+        order = FIRST
+    []
+[]
+
+[AuxKernels]
+    [Reynolds]
+        type = ReynoldsNumberFunctorAux
+        speed = speed
+        rho = ${rho}
+        mu = ${mu}
+        variable = Reynolds
+    []
+    [Peclet]
+        type = PecletNumberFunctorAux
+        speed = speed
+        thermal_diffusivity = 'thermal_diffusivity'
+        variable = Peclet
+    []
+[]
+
+[Variables]
+    [vel_x][]
+    [vel_y][]
+    [p][]
+    [T][]
+[]
+
+[Kernels]
+    [mass]
+        type = INSMass
+        variable = p
+        pressure = p
+        u = vel_x
+        v = vel_y
+    []
+    [x_momentum_space]
+        type = INSMomentumLaplaceForm
+        variable = vel_x
+        u = vel_x
+        v = vel_y
+        pressure = p
+        component = 0
+    []
+    [y_momentum_space]
+        type = INSMomentumLaplaceForm
+        variable = vel_y
+        u = vel_x
+        v = vel_y
+        pressure = p
+        component = 1
+    []
+    [temperature_space]
+        type = INSTemperature
+        variable = T
+        u = vel_x
+        v = vel_y
+    []
+[]      
+
+[BCs]
+    [x_no_slip]
+        type = DirichletBC
+        boundary = 'Wall'
+        value = 0.0
+        variable = vel_x
+    []
+    [y_no_slip]
+        type = DirichletBC
+        boundary = 'Wall'
+        value = 0.0
+        variable = vel_y
+    []
+    [inlet]
+        type = DirichletBC
+        boundary = 'Inlet'
+        value = {{ U_in }}
+        variable = vel_x
+    []
+    [pressure_pin]
+        type = DirichletBC
+        boundary = 'pinned_node'
+        value = {{ P_pin }}
+        variable = p
+    []
+    [T_hot]
+        type = DirichletBC
+        boundary = 'Wall'
+        value = {{ T_wall }}
+        variable = T
+    []
+    [T_cold]
+        type = DirichletBC
+        boundary = 'Inlet'
+        value = {{ T_in }}
+        variable = T
+    []  
+[]
+
+[Materials]
+    [const]
+        type = GenericConstantMaterial
+        block = 1
+        prop_names = 'rho mu k cp'
+        prop_values = '${rho} ${mu} ${k} ${cp}'
+    []
+[]
+
+[FunctorMaterials]
+    [speed]
+        type = ADVectorMagnitudeFunctorMaterial
+        vector_magnitude_name = speed
+        x_functor = vel_x
+        y_functor = vel_y
+    []
+    [thermal_diffusivity]
+        type = ThermalDiffusivityFunctorMaterial
+        cp = ${cp}
+        k = ${k}
+        rho = ${rho}
+    []
+[]
+
+[Functions]
+    [inlet_function]
+        type = ParsedFunction
+        expression = '1.0' # Constant inlet velocity
+    []
+[]
+
+[Preconditioning]
+    [SMP]
+        type = SMP
+        full = true
+        solve_type = 'NEWTON'
+    []
+[]
+
+[Executioner]
+    type = Steady
+    petsc_options_iname = '-pc_type -pc_asm_overlap -sub_pc_type'
+    petsc_options_value = 'asm      2               lu'
+    line_search = 'none'
+    nl_rel_tol = 1e-12
+[]
+
+[Outputs]
+    exodus = true
+    file_base = validation/{{ case_name }}
+    perf_graph = true
+[]
