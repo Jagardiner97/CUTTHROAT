@@ -87,36 +87,54 @@ cp = {{ cp }}
         u = vel_x
         v = vel_y
     []
+        [x_momentum_time]
+        type = INSMomentumTimeDerivative
+        variable = vel_x
+    []
+    [y_momentum_time]
+        type = INSMomentumTimeDerivative
+        variable = vel_y
+    []
+    [temperature_time]
+        type = INSTemperatureTimeDerivative
+        variable = T
+    []
 []      
 
 [BCs]
     [x_no_slip]
         type = DirichletBC
-        boundary = 'Wall'
+        boundary = 'TopBottom'
         value = 0.0
         variable = vel_x
     []
     [y_no_slip]
         type = DirichletBC
-        boundary = 'Wall'
+        boundary = 'TopBottom'
         value = 0.0
         variable = vel_y
     []
-    [inlet]
+    [inlet_u]
+        type = FunctionDirichletBC
+        boundary = 'Inlet'
+        value = inlet_function
+        variable = vel_x
+    []
+    [inlet_v]
         type = DirichletBC
         boundary = 'Inlet'
-        value = {{ U_in }}
-        variable = vel_x
+        value = 0.0
+        variable = vel_y
     []
     [pressure_pin]
         type = DirichletBC
-        boundary = 'pinned_node'
+        boundary = 'Outlet'
         value = {{ P_pin }}
         variable = p
     []
     [T_hot]
         type = DirichletBC
-        boundary = 'Wall'
+        boundary = 'TopBottom'
         value = {{ T_wall }}
         variable = T
     []
@@ -126,6 +144,19 @@ cp = {{ cp }}
         value = {{ T_in }}
         variable = T
     []  
+[]
+
+[ICs]
+    [vel_x_ic]
+        type = ConstantIC
+        variable = vel_x
+        value = {{ U_in }}
+    []
+    [T_ic]
+        type = ConstantIC
+        variable = T
+        value = {{ T_in }}
+    []
 []
 
 [Materials]
@@ -155,7 +186,7 @@ cp = {{ cp }}
 [Functions]
     [inlet_function]
         type = ParsedFunction
-        expression = '1.0' # Constant inlet velocity
+        expression = {{ U_profile_expression }}
     []
 []
 
@@ -168,15 +199,40 @@ cp = {{ cp }}
 []
 
 [Executioner]
-    type = Steady
-    petsc_options_iname = '-pc_type -pc_asm_overlap -sub_pc_type'
-    petsc_options_value = 'asm      2               lu'
-    line_search = 'none'
-    nl_rel_tol = 1e-12
+    type = Transient
+    solve_type = 'NEWTON'
+    automatic_scaling = true
+    compute_scaling_once = false
+    off_diagonals_in_auto_scaling = true
+    resid_vs_jac_scaling_param = 0
+
+    petsc_options_iname = '-pc_type -pc_factor_mat_solver_type'
+    petsc_options_value = 'lu       mumps'
+    line_search = 'bt'
+    nl_rel_tol = 1e-8
+    nl_abs_tol = 1e-12
+    nl_max_its = 20
+
+    steady_state_detection = true
+    steady_state_tolerance = 1e-8
+    start_time = 0
+    end_time = 1e6          # just a ceiling; detection should stop it earlier
+
+    [TimeStepper]
+        type = IterationAdaptiveDT
+        dt = 1.0
+        growth_factor = 1.5
+        cutback_factor = 0.5
+        optimal_iterations = 6
+        dtmax = 500
+    []
 []
 
 [Outputs]
-    exodus = true
-    file_base = validation/{{ case_name }}
+    [exo]
+        type = Exodus
+        execute_on = 'FINAL'
+        file_base = validation/{{ case_name }}
+    []
     perf_graph = true
 []
